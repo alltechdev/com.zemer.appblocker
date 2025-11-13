@@ -10,24 +10,9 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/play_store_status_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:text="@string/restriction_status_off" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/play_store_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/restriction_toggle_label" />
-
-        <TextView
             android:id="@+id/app_list_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
             android:text="@string/app_restrictions_header"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 

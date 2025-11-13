@@ -1,4 +1,4 @@
-package eu.dumbdroid.deviceowner.ui
+package com.zemer.appblocker.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import eu.dumbdroid.deviceowner.R
+import com.zemer.appblocker.R
 
 class ChangePinFragment : Fragment() {
 
@@ -67,7 +67,7 @@ class ChangePinFragment : Fragment() {
             hasExistingPin && !pinStorage.verifyPin(currentPin) -> {
                 currentPinInput?.error = getString(R.string.pin_invalid)
             }
-            newPin.isNotEmpty() && newPin.length < MIN_PIN_LENGTH -> {
+            newPin.length < MIN_PIN_LENGTH -> {
                 newPinInput?.error = getString(R.string.pin_too_short)
             }
             newPin != confirmPin -> {
@@ -75,12 +75,7 @@ class ChangePinFragment : Fragment() {
             }
             else -> {
                 pinStorage.savePin(newPin)
-                val message = if (newPin.isEmpty()) {
-                    R.string.pin_removed
-                } else {
-                    R.string.pin_updated
-                }
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), R.string.pin_updated, Toast.LENGTH_SHORT).show()
                 callback?.onPinUpdated()
             }
         }

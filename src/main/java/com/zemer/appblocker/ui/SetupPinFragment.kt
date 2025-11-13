@@ -1,4 +1,4 @@
-package eu.dumbdroid.deviceowner.ui
+package com.zemer.appblocker.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -10,14 +10,13 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import eu.dumbdroid.deviceowner.R
+import com.zemer.appblocker.R
 
 class SetupPinFragment : Fragment() {
 
     private var pinInput: EditText? = null
     private var confirmPinInput: EditText? = null
     private var continueButton: Button? = null
-    private var skipPinCheckbox: CheckBox? = null
     private var callback: Callback? = null
 
     override fun onAttach(context: Context) {
@@ -33,17 +32,6 @@ class SetupPinFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_setup_pin, container, false)
         pinInput = view.findViewById(R.id.pin_input)
         confirmPinInput = view.findViewById(R.id.confirm_pin_input)
-        skipPinCheckbox = view.findViewById(R.id.skip_pin_checkbox)
-        skipPinCheckbox?.setOnCheckedChangeListener { _, isChecked ->
-            pinInput?.isEnabled = !isChecked
-            confirmPinInput?.isEnabled = !isChecked
-            if (isChecked) {
-                pinInput?.setText("")
-                confirmPinInput?.setText("")
-                pinInput?.error = null
-                confirmPinInput?.error = null
-            }
-        }
         val button = view.findViewById<Button>(R.id.continue_button)
         button!!.setOnClickListener { handleContinue() }
         continueButton = button
@@ -56,15 +44,11 @@ class SetupPinFragment : Fragment() {
         confirmPinInput?.setText("")
         pinInput?.error = null
         confirmPinInput?.error = null
-        skipPinCheckbox?.isChecked = false
-        pinInput?.isEnabled = true
-        confirmPinInput?.isEnabled = true
     }
 
     private fun handleContinue() {
         val pin = pinInput?.text?.toString()?.trim().orEmpty()
         val confirmPin = confirmPinInput?.text?.toString()?.trim().orEmpty()
-        val skipPin = skipPinCheckbox?.isChecked == true
 
         pinInput?.error = null
         confirmPinInput?.error = null
@@ -73,12 +57,6 @@ class SetupPinFragment : Fragment() {
         val pinStorage = activity.getPinStorage()
 
         when {
-            skipPin -> {
-                pinStorage.savePin("")
-                pinStorage.setRestrictionEnabled(false)
-                Toast.makeText(requireContext(), R.string.pin_removed, Toast.LENGTH_SHORT).show()
-                callback?.onPinCreated()
-            }
             pin.length < MIN_PIN_LENGTH ->
                 pinInput?.error = getString(R.string.pin_too_short)
             pin != confirmPin ->
@@ -94,11 +72,9 @@ class SetupPinFragment : Fragment() {
 
     override fun onDestroyView() {
         continueButton?.setOnClickListener(null)
-        skipPinCheckbox?.setOnCheckedChangeListener(null)
         pinInput = null
         confirmPinInput = null
         continueButton = null
-        skipPinCheckbox = null
         super.onDestroyView()
     }
 

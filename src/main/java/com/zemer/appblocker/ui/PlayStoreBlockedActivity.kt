@@ -1,8 +1,8 @@
-package eu.dumbdroid.deviceowner.ui
+package com.zemer.appblocker.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import eu.dumbdroid.deviceowner.R
+import com.zemer.appblocker.R
 
 class PlayStoreBlockedActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package eu.dumbdroid.deviceowner.policy
+package com.zemer.appblocker.policy
 
 import android.content.ComponentName
 import android.content.Context
@@ -9,7 +9,7 @@ import android.os.Build
 import android.os.Process
 import android.os.UserManager
 import android.util.Log
-import eu.dumbdroid.deviceowner.ui.PlayStoreBlockedActivity
+import com.zemer.appblocker.ui.PlayStoreBlockedActivity
 
 class DeviceRestrictionManager(private val context: Context) {
 
@@ -51,10 +51,12 @@ class DeviceRestrictionManager(private val context: Context) {
     fun isApplicationBlocked(packageName: String): Boolean {
         return try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                packageManager.getApplicationHiddenSettingAsUser(
-                    packageName,
-                    Process.myUserHandle(),
+                val method = packageManager.javaClass.getMethod(
+                    "getApplicationHiddenSettingAsUser",
+                    String::class.java,
+                    android.os.UserHandle::class.java
                 )
+                method.invoke(packageManager, packageName, Process.myUserHandle()) as Boolean
             } else {
                 getStoredBlockedApplications().contains(packageName)
             }
@@ -126,11 +128,13 @@ val flags = PackageManager.MATCH_UNINSTALLED_PACKAGES or
             return false
         }
         return try {
-            packageManager.setApplicationHiddenSettingAsUser(
-                packageName,
-                hidden,
-                Process.myUserHandle(),
+            val method = packageManager.javaClass.getMethod(
+                "setApplicationHiddenSettingAsUser",
+                String::class.java,
+                Boolean::class.javaPrimitiveType,
+                android.os.UserHandle::class.java
             )
+            method.invoke(packageManager, packageName, hidden, Process.myUserHandle()) as Boolean
         } catch (exception: Exception) {
             false
         }
@@ -170,10 +174,12 @@ val flags = PackageManager.MATCH_UNINSTALLED_PACKAGES or
             return false
         }
         return try {
-            packageManager.getApplicationHiddenSettingAsUser(
-                context.packageName,
-                Process.myUserHandle(),
+            val method = packageManager.javaClass.getMethod(
+                "getApplicationHiddenSettingAsUser",
+                String::class.java,
+                android.os.UserHandle::class.java
             )
+            method.invoke(packageManager, context.packageName, Process.myUserHandle())
             true
         } catch (exception: Exception) {
 	    Log.e("Dumbdroid admin", "Can't modify hidden state", exception)

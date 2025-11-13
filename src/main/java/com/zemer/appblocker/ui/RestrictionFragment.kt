@@ -1,4 +1,4 @@
-package eu.dumbdroid.deviceowner.ui
+package com.zemer.appblocker.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -12,19 +12,16 @@ import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import eu.dumbdroid.deviceowner.R
-import eu.dumbdroid.deviceowner.policy.DeviceRestrictionManager
+import com.zemer.appblocker.R
+import com.zemer.appblocker.policy.DeviceRestrictionManager
 import java.util.Locale
 
 class RestrictionFragment : Fragment() {
 
-    private var playStoreStatusText: TextView? = null
-    private var playStoreSwitch: SwitchCompat? = null
     private var appListContainer: ViewGroup? = null
     private var appListEmptyText: TextView? = null
     private var deviceOwnerWarning: TextView? = null
     private var changePinButton: Button? = null
-//    private var lockButton: Button? = null
     private var callback: Callback? = null
     private val appToggleViews = mutableListOf<SwitchCompat>()
 
@@ -39,21 +36,16 @@ class RestrictionFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         val view = inflater.inflate(R.layout.fragment_restriction, container, false)
-        playStoreStatusText = view.findViewById(R.id.play_store_status_text)
-        playStoreSwitch = view.findViewById(R.id.play_store_switch)
         appListContainer = view.findViewById(R.id.app_list_container)
         appListEmptyText = view.findViewById(R.id.app_list_empty_text)
         deviceOwnerWarning = view.findViewById(R.id.device_owner_warning)
         changePinButton = view.findViewById(R.id.change_pin_button)
-        //lockButton = view.findViewById(R.id.lock_button)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         changePinButton?.setOnClickListener { callback?.onRequestChangePin() }
-        //lockButton?.setOnClickListener { callback?.onRequestLock() }
-        playStoreSwitch?.setOnCheckedChangeListener(playStoreSwitchListener)
     }
 
     override fun onResume() {
@@ -65,15 +57,11 @@ class RestrictionFragment : Fragment() {
         val activity = requireActivity() as MainActivity
         val pinStorage = activity.getPinStorage()
         val restrictionManager = activity.getRestrictionManager()
-        val isRestricted = pinStorage.isRestrictionEnabled()
         val isDeviceOwner = restrictionManager.isDeviceOwner()
         changePinButton?.setText(
             if (pinStorage.isPinSet()) R.string.change_pin_button else R.string.set_pin_button,
         )
-        setSwitchCheckedWithoutCallback(playStoreSwitch, isRestricted, playStoreSwitchListener)
-        playStoreSwitch?.isEnabled = isDeviceOwner
         deviceOwnerWarning?.isVisible = !isDeviceOwner
-        updatePlayStoreStatusText(isRestricted)
         val apps = restrictionManager.getManageableApplications()
             .sortedBy { it.label.lowercase(Locale.getDefault()) }
         updateApplicationList(apps, restrictionManager, isDeviceOwner)
@@ -90,26 +78,15 @@ class RestrictionFragment : Fragment() {
         view.setOnCheckedChangeListener(listener)
     }
 
-    private fun updatePlayStoreStatusText(restricted: Boolean) {
-        playStoreStatusText?.setText(
-            if (restricted) R.string.restriction_status_on else R.string.restriction_status_off,
-        )
-    }
-
     override fun onDestroyView() {
-        playStoreSwitch?.setOnCheckedChangeListener(null)
         appToggleViews.forEach { it.setOnCheckedChangeListener(null) }
         appToggleViews.clear()
         appListContainer?.removeAllViews()
         changePinButton?.setOnClickListener(null)
-        //lockButton?.setOnClickListener(null)
-        playStoreStatusText = null
-        playStoreSwitch = null
         appListContainer = null
         appListEmptyText = null
         deviceOwnerWarning = null
         changePinButton = null
-        //lockButton = null
         super.onDestroyView()
     }
 
@@ -119,7 +96,6 @@ class RestrictionFragment : Fragment() {
     }
 
     interface Callback {
-        fun onRestrictionChanged(enabled: Boolean): Boolean
         fun onAppRestrictionChanged(packageName: String, blocked: Boolean): Boolean
         fun onRequestLock()
         fun onRequestChangePin()
@@ -127,18 +103,6 @@ class RestrictionFragment : Fragment() {
 
     companion object {
         fun newInstance(): RestrictionFragment = RestrictionFragment()
-    }
-
-    private val playStoreSwitchListener = object : CompoundButton.OnCheckedChangeListener {
-        override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-            val applied = callback?.onRestrictionChanged(isChecked) ?: false
-            if (applied) {
-                updatePlayStoreStatusText(isChecked)
-            } else {
-                showRestrictionError()
-                setSwitchCheckedWithoutCallback(playStoreSwitch, !isChecked, this)
-            }
-        }
     }
 
     private fun showRestrictionError() {

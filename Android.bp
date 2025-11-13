@@ -1,7 +1,7 @@
 android_app {
     name: "DumbdroidAdmin",
     srcs: [
-        "src/main/java/eu/dumbdroid/deviceowner/**/*.kt",
+        "src/main/java/com/zemer/appblocker/**/*.kt",
     ],
     resource_dirs: ["res"],
     manifest: "AndroidManifest.xml",

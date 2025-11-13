@@ -1,4 +1,4 @@
-package eu.dumbdroid.deviceowner.ui
+package com.zemer.appblocker.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import eu.dumbdroid.deviceowner.R
+import com.zemer.appblocker.R
 
 class PinEntryFragment : Fragment() {
 

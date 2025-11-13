@@ -1,10 +1,10 @@
-package eu.dumbdroid.deviceowner.ui
+package com.zemer.appblocker.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import eu.dumbdroid.deviceowner.R
-import eu.dumbdroid.deviceowner.policy.DeviceRestrictionManager
-import eu.dumbdroid.deviceowner.storage.PinStorage
+import com.zemer.appblocker.R
+import com.zemer.appblocker.policy.DeviceRestrictionManager
+import com.zemer.appblocker.storage.PinStorage
 
 class MainActivity : AppCompatActivity(),
     SetupPinFragment.Callback,
@@ -81,14 +81,6 @@ class MainActivity : AppCompatActivity(),
 
     override fun onRequestLock() {
         showPinEntry()
-    }
-
-    override fun onRestrictionChanged(enabled: Boolean): Boolean {
-        val applied = restrictionManager.setPlayStoreRestricted(enabled)
-        if (applied) {
-            pinStorage.setRestrictionEnabled(enabled)
-        }
-        return applied
     }
 
     override fun onAppRestrictionChanged(packageName: String, blocked: Boolean): Boolean =

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-            package="eu.dumbdroid.deviceowner"
+            package="com.zemer.appblocker"
     android:sharedUserId="android.uid.system"
     xmlns:tools="http://schemas.android.com/tools"
     coreApp="true">
@@ -19,7 +19,7 @@
         android:theme="@style/Theme.DeviceOwner">
 
         <activity
-            android:name="eu.dumbdroid.deviceowner.ui.MainActivity"
+            android:name="com.zemer.appblocker.ui.MainActivity"
             android:exported="true">
 	<!--            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
         </activity>
 
         <activity
-            android:name="eu.dumbdroid.deviceowner.ui.PlayStoreBlockedActivity"
+            android:name="com.zemer.appblocker.ui.PlayStoreBlockedActivity"
             android:enabled="false"
             android:exported="true"
             android:excludeFromRecents="true"

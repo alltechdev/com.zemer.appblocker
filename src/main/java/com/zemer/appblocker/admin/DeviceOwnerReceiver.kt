@@ -1,11 +1,11 @@
-package eu.dumbdroid.deviceowner.admin
+package com.zemer.appblocker.admin
 
 import android.app.admin.DeviceAdminReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
-import eu.dumbdroid.deviceowner.R
+import com.zemer.appblocker.R
 
 /**
  * Device admin receiver that acts as the entry point for device owner policies.

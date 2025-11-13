@@ -1,4 +1,4 @@
-package eu.dumbdroid.deviceowner.storage
+package com.zemer.appblocker.storage
 
 import android.content.Context
 import android.util.Base64
@@ -18,14 +18,7 @@ class PinStorage(context: Context) {
         preferences.getBoolean(KEY_SETUP_COMPLETE, isPinSet())
 
     fun savePin(pin: String) {
-        if (pin.isEmpty()) {
-            preferences.edit()
-                .remove(KEY_PIN_HASH)
-                .remove(KEY_PIN_SALT)
-                .putBoolean(KEY_SETUP_COMPLETE, true)
-                .apply()
-            return
-        }
+        require(pin.isNotEmpty()) { "PIN cannot be empty" }
         val salt = ByteArray(SALT_LENGTH).also(secureRandom::nextBytes)
         val hash = hash(pin, salt)
         preferences.edit()
@@ -37,7 +30,7 @@ class PinStorage(context: Context) {
 
     fun verifyPin(pin: String): Boolean {
         if (!preferences.contains(KEY_PIN_HASH) || !preferences.contains(KEY_PIN_SALT)) {
-            return pin.isEmpty()
+            return false
         }
         val hash = preferences.getString(KEY_PIN_HASH, null) ?: return false
         val saltEncoded = preferences.getString(KEY_PIN_SALT, null) ?: return false
